@@ -8,6 +8,7 @@ ui_*.h
 Makefile
 .qmake.stash
 qmake6.conf
+moc_predefs.h
 
 # Compiled binaries
 /ZoomArchy
@@ -27,7 +28,6 @@ Thumbs.db
 
 # Logs, screenshots, and temporary captures
 *.log
-/tmp/
 *.png
 *.jpg
 *.jpeg
@@ -36,3 +36,19 @@ Thumbs.db
 # IDE/project metadata (optional local)
 .vscode/
 .idea/
+
+# Local legacy Qt/C++ and non-plugin source/build files (kept locally, not part of plugin release)
+main.cpp
+main.qml
+main.o
+zoomarchy.cpp
+zoomarchy.h
+zoomarchy.o
+ZoomArchyConfig.h
+zoomarchy.pro
+assets.qrc
+qml.qrc
+app.desktop
+install.inx
+assets/
+src/

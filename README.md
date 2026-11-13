@@ -2,25 +2,40 @@
 
 ZoomArchy is an Omarchy/Quickshell overlay plugin that provides a screen magnifier lens with a spotlight effect. It captures the current screen on activation and displays a fullscreen overlay with a movable magnified area that follows the cursor.
 
+- **GitHub:** <https://github.com/vlaktaks/ZoomArchy>
 - **Plugin ID:** `jp.zoomarchy`
 - **Version:** `0.1.0`
 - **Kind:** `overlay` (Quickshell/Omarchy plugin)
 - **Entry point:** `Overlay.qml`
 
+## Repository structure
+
+This repository is a standalone Omarchy plugin repository: the **repository root is directly the installable plugin**. The following files are at the root level:
+
+- `manifest.json` — plugin manifest
+- `Overlay.qml` — overlay entrypoint (active implementation)
+
+Other files at the root include documentation and repository metadata (e.g. `README.md`, `LICENSE`, `CHANGELOG.md`, `.gitignore`, `.gitattributes`).
+
+The canonical plugin ID is `jp.zoomarchy`. When installed, the plugin belongs in:
+
+`~/.config/omarchy/plugins/jp.zoomarchy/`
+
 ## Current functionality
 
-Based on the current implementation (`.config/omarchy/plugins/zoomarchy/Overlay.qml`):
+Based on the current implementation (`Overlay.qml`):
 
-- **Activation:** summoned as the `jp.zoomarchy` overlay (intended shortcut: `Super+Z`, depending on your Omarchy shortcut configuration).
+- **Activation:** summoned as the `jp.zoomarchy` overlay panel (for example via a manually configured shortcut such as `Super+Z`, or by direct summon command).
 - **Screenshot capture:** runs `grim /tmp/zoomarchy-screenshot.png` when opened and shows the captured image in the overlay.
-- **Magnifier lens:** a 200×200 px clipped, scaled view of the captured screenshot follows the cursor position.
+- **Magnifier lens:** a 200 × 200 px clipped, scaled view of the captured screenshot follows the cursor position.
 - **Zoom behavior:**
   - Initial zoom level: `2.0`
   - Minimum zoom: `1.0`
   - Maximum zoom: `5.0`
-  - **Left click:** increases zoom by `1.0` (up to max)
-  - **Mouse wheel:** adjusts zoom by `±0.5` (clamped to min/max)
-  - **Reopen while already shown:** resets zoom to `2.0`
+  - **Left mouse click:** increase zoom level by `1.0` (up to maximum)
+  - **Right mouse click:** decrease zoom level by `1.0` (down to minimum)
+  - **Mouse wheel:** adjust zoom level in steps of `0.5` (clamped to minimum/maximum)
+  - **Reopen while overlay is active:** zoom level is reset to `2.0`
 - **Spotlight effect:** a radial spotlight/dimming overlay centered on the cursor is drawn over the screen.
 - **Close:** `Escape` closes the overlay and clears the current screenshot path/state.
 
@@ -42,45 +57,57 @@ Based on the current implementation (`.config/omarchy/plugins/zoomarchy/Overlay.
 
 ## Installation
 
-### From this repository (local install script)
+### Recommended: Omarchy plugin manager
+
+Install directly from the GitHub repository:
 
 ```bash
-git clone <repository-url>
-cd ZoomArchy
-bash install.sh
+omarchy plugin add https://github.com/vlaktaks/ZoomArchy.git --enable
 ```
 
-The root `install.sh` script:
-- checks for `grim` and `omarchy`
-- copies plugin files from `.config/omarchy/plugins/zoomarchy/` to `~/.config/omarchy/plugins/jp.zoomarchy/`
-- runs `omarchy plugin validate ~/.config/omarchy/plugins/jp.zoomarchy`
-- enables the plugin with `omarchy plugin enable jp.zoomarchy`
-- appends `panel jp.zoomarchy` to `~/.config/omarchy/default/omarchy/shortcuts` if that file exists and the entry is missing (idempotent)
-- checks common Hyprland config locations for an existing binding referencing `jp.zoomarchy` **without modifying Hyprland configuration**; if none is found, it prints a manual `Super+Z` binding instruction
+This installs the plugin into `~/.config/omarchy/plugins/jp.zoomarchy/` (canonical plugin ID: `jp.zoomarchy`), validates it, and (with `--enable`) enables it. The repository root is the installable plugin root (`manifest.json` and `Overlay.qml` are at root level).
 
-### Manual copy
+If you install without `--enable`, you can use the same repository URL and then enable the plugin explicitly:
 
 ```bash
-mkdir -p ~/.config/omarchy/plugins/jp.zoomarchy
-cp -r .config/omarchy/plugins/zoomarchy/* ~/.config/omarchy/plugins/jp.zoomarchy/
-omarchy plugin validate ~/.config/omarchy/plugins/jp.zoomarchy
+omarchy plugin add https://github.com/vlaktaks/ZoomArchy.git
 omarchy plugin enable jp.zoomarchy
 ```
 
-After installation/enabling, reload or restart the shell as needed for your Omarchy setup (for example: `omarchy restart shell`).
+After installation/enabling or after making changes, the Omarchy shell may need to rescan plugins. A locally tested way to rescan plugins is:
 
-#### Super+Z shortcut binding
+```bash
+omarchy-shell shell rescanPlugins
+```
 
-`Super+Z` activation depends on a Hyprland/Omarchy keybinding that summons/toggles the `jp.zoomarchy` panel. Because Hyprland configuration layouts vary between setups, the root installer **does not automatically edit your Hyprland configuration**.
+### Local development / manual install
 
-- If a binding referencing `jp.zoomarchy` is already present, the installer leaves it unchanged.
-- If no binding is detected, add the following to the appropriate bindings/config file for your setup (only once, and only if not already present):
+To test a local checkout as the installed plugin, install from the repository/plugin root (where `manifest.json` and `Overlay.qml` are located):
+
+```bash
+mkdir -p ~/.config/omarchy/plugins/jp.zoomarchy
+install -m644 manifest.json ~/.config/omarchy/plugins/jp.zoomarchy/
+install -m644 Overlay.qml ~/.config/omarchy/plugins/jp.zoomarchy/
+omarchy plugin validate ~/.config/omarchy/plugins/jp.zoomarchy
+omarchy plugin enable jp.zoomarchy
+omarchy-shell shell rescanPlugins
+```
+
+Exclude local build artifacts, editor files, and other non-plugin files as appropriate for your checkout.
+
+## Keyboard shortcut (Super+Z) — manual example
+
+`Super+Z` can be used as a manual Hyprland keybinding to summon/toggle the `jp.zoomarchy` panel. **The plugin itself does not configure any Hyprland shortcut.** Hyprland configuration layouts vary between setups, so this repository does not automatically modify your Hyprland configuration.
+
+If no binding is already configured for `jp.zoomarchy`, add the following to the appropriate bindings/config file for your setup (only once, and only if not already present):
 
 ```lua
 o.bind("SUPER + Z", "ZoomArchy zoom", { panel = "jp.zoomarchy" })
 ```
 
-You can also activate the overlay without a keybinding by running:
+After adding or changing bindings, reload your Hyprland/Omarchy configuration as required by your setup.
+
+You can also activate the overlay without a keybinding:
 
 ```bash
 omarchy-shell shell summon jp.zoomarchy '{}'
@@ -88,65 +115,66 @@ omarchy-shell shell summon jp.zoomarchy '{}'
 
 ## Usage
 
-- **Activate:** trigger the overlay via your configured shortcut (e.g. `Super+Z`) or with `omarchy-shell shell summon jp.zoomarchy '{}'`
-- **Move mouse:** move the magnifier lens and spotlight
-- **Left click:** increase zoom (`+1.0`, up to `5.0`)
-- **Scroll wheel:** fine-tune zoom (`±0.5`, range `1.0`–`5.0`)
+- **Activate:** use your configured shortcut (e.g. manual `Super+Z` binding) or `omarchy-shell shell summon jp.zoomarchy '{}'`
+- **Move mouse:** move the magnifier lens (200 × 200 px) and spotlight
+- **Left mouse click:** increase zoom level by `1.0` (up to `5.0`)
+- **Right mouse click:** decrease zoom level by `1.0` (down to `1.0`)
+- **Mouse wheel:** adjust zoom level in steps of `0.5` (range `1.0`–`5.0`)
 - **Escape:** close the overlay
-- **Activate again while open:** resets zoom to `2.0`
+- **Activate again while overlay is active:** zoom level is reset to `2.0`
 
-## Plugin files and behavior notes
+## Enabling, disabling, updating, and uninstalling
 
-- **Manifest:** `.config/omarchy/plugins/zoomarchy/manifest.json`
-  - `id`: `jp.zoomarchy`
-  - `version`: `0.1.0`
-  - `kinds`: `["overlay"]`
-  - `keepLoaded`: `true`
-  - `entryPoints.overlay`: `Overlay.qml`
-- **Overlay implementation:** `.config/omarchy/plugins/zoomarchy/Overlay.qml`
-- **Plugin install/uninstall helpers (plugin directory):**
-  - `.config/omarchy/plugins/zoomarchy/install.sh` creates `~/.config/omarchy/apps/zoomarchy.env` (template/default values) if missing.
-  - `.config/omarchy/plugins/zoomarchy/uninstall.sh` removes `/usr/local/share/omarchy/apps/zoomarchy.env` if present.
-- **Root repository helpers:** `install.sh` and `uninstall.sh` install/remove the plugin in `~/.config/omarchy/plugins/jp.zoomarchy` and manage the local shortcut/config entries described above.
-
-> **Configuration note:** `zoomarchy.env` templates/defaults may be created by install scripts, but the current `Overlay.qml` implementation does not read or apply environment/config values (zoom level, colors, etc. are defined in code).
-
-## Uninstallation
-
-### Using the repository script
+Using the Omarchy plugin manager:
 
 ```bash
-bash uninstall.sh
-```
-
-The root `uninstall.sh` script:
-- disables the plugin (`omarchy plugin disable jp.zoomarchy`)
-- removes `~/.config/omarchy/plugins/jp.zoomarchy`
-- removes `~/.config/omarchy/apps/zoomarchy.env` if present
-- removes a `panel jp.zoomarchy` entry from `~/.config/omarchy/default/omarchy/shortcuts` if present
-
-If you manually added a `Super+Z` Hyprland binding for `jp.zoomarchy`, remove it manually from your Hyprland configuration if you no longer want it.
-
-### Manual removal
-
-```bash
+# Enable / disable
+omarchy plugin enable jp.zoomarchy
 omarchy plugin disable jp.zoomarchy
-rm -rf ~/.config/omarchy/plugins/jp.zoomarchy
+
+# Update (for git-managed installs)
+omarchy plugin update jp.zoomarchy
+
+# Remove/uninstall
+omarchy plugin remove jp.zoomarchy
 ```
 
-Remove any local shortcut/config entries you added manually if applicable.
+If you added a manual `Super+Z` Hyprland binding for `jp.zoomarchy`, remove it manually from your Hyprland configuration if you no longer want it.
 
-## Repository contents
+## Configuration
 
-This repository contains the Omarchy plugin implementation in `.config/omarchy/plugins/zoomarchy/` as well as additional legacy/experimental Qt/C++ application files in the repository root (e.g. `main.cpp`, `main.qml`, `zoomarchy.pro`, `Makefile`, and build artifacts). The documented, current ZoomArchy functionality described above is provided by the Quickshell overlay plugin (`Overlay.qml`).
+The current `Overlay.qml` implementation does not read external runtime configuration files. Zoom levels, lens size, and visual behavior are defined in code (`Overlay.qml`).
+
+## Troubleshooting
+
+- **Plugin not found / cannot enable:** ensure the plugin is installed in `~/.config/omarchy/plugins/jp.zoomarchy/` and validate it:
+  ```bash
+  omarchy plugin validate ~/.config/omarchy/plugins/jp.zoomarchy
+  omarchy plugin list
+  ```
+- **Super+Z does nothing:** `Super+Z` is only an example of a manual Hyprland binding; the plugin does not configure shortcuts automatically. Verify a binding for `jp.zoomarchy` exists in your active configuration, or test with `omarchy-shell shell summon jp.zoomarchy '{}'`.
+- **No screenshot / overlay appears:** ensure `grim` is installed and available in `PATH` (the overlay captures to `/tmp/zoomarchy-screenshot.png`).
+- **After changes:** rescan plugins if needed. A locally tested command is:
+  ```bash
+  omarchy-shell shell rescanPlugins
+  ```
+
+## Development and testing
+
+- **Plugin validation:**
+  ```bash
+  omarchy plugin validate .
+  ```
+- **Primary files:** `manifest.json`, `Overlay.qml`
+- **Runtime verification:** activation, magnifier movement, zoom controls, Escape close, reopen/reset, and visual correctness on the target Omarchy/Hyprland desktop. Static validation does not replace runtime/visual verification.
 
 ## Known limitations
 
 - Uses a screenshot captured at activation time (`grim` to `/tmp/zoomarchy-screenshot.png`); the overlay does not update live as underlying windows change.
 - Depends on `grim` and a compatible Omarchy/Quickshell Wayland environment.
 - Behavior and appearance have been developed and adjusted primarily for the author's setup; results may vary across hardware, displays, scaling, themes, and compositor configurations.
-- No text selection, OCR, or text extraction is implemented in the current overlay.
-- Runtime zoom/appearance settings are currently hardcoded in `Overlay.qml` (install-generated config files are not consumed by the overlay).
+- No text selection, OCR, or text extraction is implemented.
+- Runtime zoom/appearance settings are currently hardcoded in `Overlay.qml`.
 
 ## License
 
