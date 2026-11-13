@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "jp.zoomarchy",
+  "name": "ZoomArchy",
+  "version": "0.1.0",
+  "author": "J.P. Ramackers",
+  "description": "A Wayland screen magnification and text highlighting overlay for Omarchy.",
+  "kinds": [
+    "overlay"
+  ],
+  "keepLoaded": true,
+  "entryPoints": {
+    "overlay": "Overlay.qml"
+  }
+}

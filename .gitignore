@@ -1,0 +1,38 @@
+# Build artifacts and generated files
+*.o
+*.obj
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+Makefile
+.qmake.stash
+qmake6.conf
+
+# Compiled binaries
+/ZoomArchy
+*.AppImage
+
+# Local/editor/OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Local environment and machine-specific files
+.env
+.env.*
+!.env.example
+
+# Logs, screenshots, and temporary captures
+*.log
+/tmp/
+*.png
+*.jpg
+*.jpeg
+*.webp
+
+# IDE/project metadata (optional local)
+.vscode/
+.idea/

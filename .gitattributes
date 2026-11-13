@@ -1,0 +1,17 @@
+# ZoomArchy .gitattributes voor consistente line endings en file modes
+
+# Forceer LF line endings in alle teksten bestanden
+*.qml text eol=lf
+*.cpp text eol=lf
+*.h text eol=lf
+*.hpp text eol=lf
+*.pro text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.xml text eol=lf
+*.ini text eol=lf
+*.env text eol=lf
+*.desktop text eol=lf
+
+# Git bestandsmodi normaliseren voor Windows/Mac/Unix compatibiliteit
+*.{qml,cpp,h,hpp,pro,md,json,xml,ini,desktop} text=auto nl=true
