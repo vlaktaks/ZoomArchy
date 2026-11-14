@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=ZoomArchy
+GenericName=Text Zoom Tool
+Comment=Inzoom op tekst met Super+Z
+Exec=/usr/local/bin/%f
+Icon=zoomarchy
+Terminal=false
+Type=Application
+Categories=Utility;Graphics;
+Keywords=zoom;text;highlight;selection;overlay

@@ -4,7 +4,7 @@ ZoomArchy is an Omarchy/Quickshell overlay plugin that provides a screen magnifi
 
 - **GitHub:** <https://github.com/vlaktaks/ZoomArchy>
 - **Plugin ID:** `jp.zoomarchy`
-- **Version:** `0.1.1`
+- **Version:** `0.1.2`
 - **Kind:** `overlay` (Quickshell/Omarchy plugin)
 - **Entry point:** `Overlay.qml`
 
@@ -26,7 +26,7 @@ The canonical plugin ID is `jp.zoomarchy`. When installed, the plugin belongs in
 Based on the current implementation (`Overlay.qml`):
 
 - **Activation:** summoned as the `jp.zoomarchy` overlay panel (for example via a manually configured shortcut such as `Super+Z`, or by direct summon command).
-- **Screenshot capture:** runs `grim /tmp/zoomarchy-screenshot.png` when opened and shows the captured image in the overlay.
+- **Screenshot capture:** when opened, validates `$XDG_RUNTIME_DIR`, creates a unique private temporary capture directory, and runs `grim` to save `capture.png` inside it for display in the overlay. The final runtime-directory and capture-file components are checked (without following final-component symlinks) for ownership, type, and permissions before a capture is accepted.
 - **Magnifier lens:** a 200 × 200 px clipped, scaled view of the captured screenshot follows the cursor position.
 - **Zoom behavior:**
   - Initial zoom level: `2.0`
@@ -37,16 +37,18 @@ Based on the current implementation (`Overlay.qml`):
   - **Mouse wheel:** adjust zoom level in steps of `0.5` (clamped to minimum/maximum)
   - **Reopen while overlay is active:** zoom level is reset to `2.0`
 - **Spotlight effect:** a radial spotlight/dimming overlay centered on the cursor is drawn over the screen.
-- **Close:** `Escape` closes the overlay and clears the current screenshot path/state.
+- **Close:** `Escape` closes the overlay, clears the current screenshot path/state, and attempts best-effort cleanup of its own temporary screenshot files.
 
 ## How it works
 
-1. When activated, ZoomArchy captures the current screen using `grim`.
-2. The overlay displays the captured screenshot fullscreen.
+1. When activated, ZoomArchy validates `$XDG_RUNTIME_DIR`, creates a unique private temporary capture directory inside it, and captures the current screen using `grim`.
+2. After capture, ZoomArchy checks the final runtime-directory and capture-file components (without following final-component symlinks), including ownership, type, and permissions, before accepting the screenshot for display from that private temporary location.
 3. A magnified lens and spotlight follow the cursor over that captured image.
-4. Interactions (click/wheel/Escape) update zoom or close the overlay.
+4. Interactions (click/wheel/Escape) update zoom or close the overlay; on close, failure, or replacement, ZoomArchy attempts best-effort removal of its own temporary screenshot files/directories.
 
-> **Note:** The magnifier operates on a screenshot taken at activation time (a static snapshot), not a continuously live-updating view of the desktop.
+> **Note:** The magnifier operates on a screenshot taken at activation time (a static snapshot), not a continuously live-updating view of the desktop. If `$XDG_RUNTIME_DIR` is missing, invalid, or not safely usable, ZoomArchy does not fall back to `/tmp` and does not open the overlay with a captured screenshot.
+>
+> **Security note:** captures are stored in unique private capture directories under validated `$XDG_RUNTIME_DIR`. Final-component checks do not independently guarantee that every intermediate path component is safe, TOCTOU limitations remain, and screenshot permission hardening occurs after `grim` creates the file inside the private capture directory. Cleanup is best-effort and cannot be guaranteed after crashes or forced termination. There is no `/tmp` fallback.
 
 ## Requirements
 
@@ -153,7 +155,7 @@ The current `Overlay.qml` implementation does not read external runtime configur
   omarchy plugin list
   ```
 - **Super+Z does nothing:** `Super+Z` is only an example of a manual Hyprland binding; the plugin does not configure shortcuts automatically. Verify a binding for `jp.zoomarchy` exists in your active configuration, or test with `omarchy-shell shell summon jp.zoomarchy '{}'`.
-- **No screenshot / overlay appears:** ensure `grim` is installed and available in `PATH` (the overlay captures to `/tmp/zoomarchy-screenshot.png`).
+- **No screenshot / overlay appears:** ensure `grim` is installed and available in `PATH`, and that `$XDG_RUNTIME_DIR` is available with safe private permissions. ZoomArchy stores each capture in a private unique temporary directory inside `$XDG_RUNTIME_DIR` and does not use an unsafe `/tmp` fallback.
 - **After changes:** rescan plugins if needed. A locally tested command is:
   ```bash
   omarchy-shell shell rescanPlugins
@@ -171,9 +173,16 @@ The current `Overlay.qml` implementation does not read external runtime configur
 - **CI:** GitHub Actions runs repository/plugin checks on `main` pushes and pull requests (`.github/workflows/ci.yml`). Omarchy-specific runtime validation remains a local requirement.
 - **Dependency updates:** Dependabot is configured for GitHub Actions updates (`.github/dependabot.yml`).
 
+## Contributing and pull requests
+
+1. **Open a pull request against `main`.** Direct pushes and force pushes to `main` are blocked by repository rulesets.
+2. **Wait for CI and reviews.** GitHub Actions runs the `CI` workflow (`.github/workflows/ci.yml`); the required status check is `Validate plugin files`. Automatic Copilot code review is enabled for PRs to the default branch (including draft PRs and new pushes) as configured in the repository ruleset, but automatic Copilot review is not the same as a separately enforced mandatory Copilot formal-approval merge gate unless explicitly configured and verified.
+3. **Obtain required approval and address feedback.** At least one approving review is required, stale approvals are dismissed on new pushes, approval of the most recent reviewable push is required, and all review conversations must be resolved. Address review feedback, especially for security-sensitive changes.
+4. **Merge only when GitHub confirms all enforced requirements are met.** Required checks must pass (with the up-to-date branch/check policy enforced by the ruleset) before merging. Verify the current repository policy in GitHub if rulesets change.
+
 ## Known limitations
 
-- Uses a screenshot captured at activation time (`grim` to `/tmp/zoomarchy-screenshot.png`); the overlay does not update live as underlying windows change.
+- Uses a screenshot captured at activation time (`grim` into a private unique temporary directory under `$XDG_RUNTIME_DIR`); the overlay does not update live as underlying windows change.
 - Depends on `grim` and a compatible Omarchy/Quickshell Wayland environment.
 - Behavior and appearance have been developed and adjusted primarily for the author's setup; results may vary across hardware, displays, scaling, themes, and compositor configurations.
 - No text selection, OCR, or text extraction is implemented.
@@ -182,6 +191,11 @@ The current `Overlay.qml` implementation does not read external runtime configur
 ## License
 
 GPL-3.0-or-later. See [`LICENSE`](LICENSE) for details.
+
+
+## Historical implementation archive
+
+A historical Qt Quick/qmake implementation is retained under `archive/legacy-qt-app/` for reference. It is not the current Omarchy/Quickshell plugin, is not part of plugin distribution, and its files are not installation dependencies for the current plugin (`manifest.json` and `Overlay.qml`).
 
 ## Project Status & Contributions
 

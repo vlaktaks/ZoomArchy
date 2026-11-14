@@ -1,0 +1,64 @@
+<!--
+Omarchy Install Rules voor ZoomArchy
+Dit bestuurd installatie via Omarchy manager
+-->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<install target="/usr/local/bin">
+    <file src="./ZoomArchy" executable="true" />
+    
+    <!-- Set permissions for security -->
+    <perm mode="750" file="ZoomArchy" />
+    
+    <!-- Register desktop file -->
+    <file src="./app.desktop" dest="/usr/share/applications/" />
+</install>
+
+<omarchy plugin type="app">
+    <name>ZoomArchy</name>
+    <version>0.1.0</version>
+    <description>Inzoom op tekst met Super+Z en zaklamp effect voor Omarchy</description>
+    <category>Utilities</category>
+    <author>jp</author>
+    <maintainer>jp@example.org</maintainer>
+    
+    <!-- Dependencies -->
+    <dependencies>
+        <qt/>
+        <omarchy/>
+    </dependencies>
+    
+    <!-- Permissions/Security -->
+    <permissions>
+        <read-only>true</read-only>
+        <user-writable>false</user-writable>
+        <no-root-privileges>true</no-root-privileges>
+    </permissions>
+    
+    <!-- Resources to watch for theme changes -->
+    <resources watch-for-theme="true">
+        <resource name="theme">
+            <path>/usr/share/themes/*/qt/qss/qt.qss</path>
+        </resource>
+    </resources>
+    
+    <!-- Safety constraints -->
+    <safety>
+        <safe-mode enabled="true" />
+        <no-network-access>true</no-network-access>
+        <user-data-isolation>true</user-data-isolation>
+        <screen-capture-allowed>true</screen-capture-allowed>
+    </safety>
+    
+    <!-- App specific settings -->
+    <settings>
+        <key name="zoomLevel" type="float" default="5.0" />
+        <key name="highlightColor" type="string" default="#e74c3c" />
+        <key name="minZoomDistance" type="int" default="100" />
+    </settings>
+    
+    <!-- Shortcuts -->
+    <shortcuts>
+        <shortcut key="super+Z" action="toggleZoomMode" />
+    </shortcuts>
+</omarchy>
