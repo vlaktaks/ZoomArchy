@@ -2,6 +2,20 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.1.1]
+
+### Changed
+- Removed unused QML imports from `Overlay.qml`.
+- Removed temporary diagnostic logging and log-only code from `Overlay.qml` while preserving existing zoom and interaction logic.
+
+### Added
+- Repository-wide agent instructions in `AGENTS.md`.
+- GitHub Actions validation workflow (`.github/workflows/ci.yml`).
+- Dependabot configuration for GitHub Actions updates (`.github/dependabot.yml`).
+
+### Documentation
+- Expanded `README.md` with project structure and development information, including references to agent instructions, CI, and Dependabot.
+
 ## [0.1.0]
 
 ### Added

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "jp.zoomarchy",
   "name": "ZoomArchy",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "J.P. Ramackers",
   "description": "A Wayland screen magnification and text highlighting overlay for Omarchy.",
   "kinds": [

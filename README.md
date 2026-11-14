@@ -4,7 +4,7 @@ ZoomArchy is an Omarchy/Quickshell overlay plugin that provides a screen magnifi
 
 - **GitHub:** <https://github.com/vlaktaks/ZoomArchy>
 - **Plugin ID:** `jp.zoomarchy`
-- **Version:** `0.1.0`
+- **Version:** `0.1.1`
 - **Kind:** `overlay` (Quickshell/Omarchy plugin)
 - **Entry point:** `Overlay.qml`
 
@@ -15,7 +15,7 @@ This repository is a standalone Omarchy plugin repository: the **repository root
 - `manifest.json` — plugin manifest
 - `Overlay.qml` — overlay entrypoint (active implementation)
 
-Other files at the root include documentation and repository metadata (e.g. `README.md`, `LICENSE`, `CHANGELOG.md`, `.gitignore`, `.gitattributes`).
+Other files at the root include documentation and repository metadata (e.g. `README.md`, `AGENTS.md`, `LICENSE`, `CHANGELOG.md`, `.gitignore`, `.gitattributes`), and project infrastructure in `.github/` (CI workflow and Dependabot configuration).
 
 The canonical plugin ID is `jp.zoomarchy`. When installed, the plugin belongs in:
 
@@ -161,12 +161,15 @@ The current `Overlay.qml` implementation does not read external runtime configur
 
 ## Development and testing
 
+- **Project/agent instructions:** see [`AGENTS.md`](AGENTS.md) for architecture, conventions, validation, and contribution workflow details.
 - **Plugin validation:**
   ```bash
   omarchy plugin validate .
   ```
 - **Primary files:** `manifest.json`, `Overlay.qml`
 - **Runtime verification:** activation, magnifier movement, zoom controls, Escape close, reopen/reset, and visual correctness on the target Omarchy/Hyprland desktop. Static validation does not replace runtime/visual verification.
+- **CI:** GitHub Actions runs repository/plugin checks on `main` pushes and pull requests (`.github/workflows/ci.yml`). Omarchy-specific runtime validation remains a local requirement.
+- **Dependency updates:** Dependabot is configured for GitHub Actions updates (`.github/dependabot.yml`).
 
 ## Known limitations
 

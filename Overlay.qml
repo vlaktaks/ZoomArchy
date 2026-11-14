@@ -1,6 +1,4 @@
 import QtQuick
-import QtQuick.Layouts
-import QtQuick.Shapes
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Wayland
@@ -107,15 +105,10 @@ PanelWindow {
     id: screencapture
     command: ["grim", "/tmp/zoomarchy-screenshot.png"]
     running: false
-    onStarted: {
-      console.log("ZoomArchy: screencapture started")
-    }
     onExited: function(exitCode, exitStatus) {
-      console.log("ZoomArchy: screencapture exited, code:", exitCode, "status:", exitStatus)
       if (exitCode === 0) {
         window.screenshotPath = "/tmp/zoomarchy-screenshot.png"
         window.shown = true
-        console.log("ZoomArchy: screenshot set, shown=true")
       }
     }
   }
@@ -190,9 +183,7 @@ PanelWindow {
     preventStealing: true
 
     function applyZoomDelta(delta) {
-      var before = window.zoomLevel
-      var next = Math.max(window.minZoom, Math.min(window.maxZoom, before + delta))
-      console.log("ZoomArchy ZOOM before:", before.toFixed(1), "delta:", delta, "after:", next.toFixed(1))
+      var next = Math.max(window.minZoom, Math.min(window.maxZoom, window.zoomLevel + delta))
       window.zoomLevel = next
     }
 
@@ -200,40 +191,24 @@ PanelWindow {
       window.cursorPos = Qt.point(mouse.x, mouse.y)
     }
 
-    onPressed: (mouse) => {
-      console.log("ZoomArchy INPUT pressed:", mouse.button, "x:", Math.round(mouse.x), "y:", Math.round(mouse.y), "zoom:", window.zoomLevel.toFixed(1))
-    }
-
-    onReleased: (mouse) => {
-      console.log("ZoomArchy INPUT released:", mouse.button, "zoom:", window.zoomLevel.toFixed(1))
-    }
-
     onClicked: (mouse) => {
-      console.log("ZoomArchy INPUT clicked:", mouse.button, "zoom:", window.zoomLevel.toFixed(1))
       if (mouse.button === Qt.LeftButton) {
-        console.log("ZoomArchy INPUT action: left-click -> zoom in +1.0")
         applyZoomDelta(1.0)
       } else if (mouse.button === Qt.RightButton) {
-        console.log("ZoomArchy INPUT action: right-click -> zoom out -1.0")
         applyZoomDelta(-1.0)
-      } else {
-        console.log("ZoomArchy INPUT action: ignored button", mouse.button)
       }
     }
 
     onWheel: (wheel) => {
-      console.log("ZoomArchy INPUT wheel:", wheel.angleDelta.y, wheel.angleDelta.x, "zoom:", window.zoomLevel.toFixed(1))
       if (wheel.angleDelta.y > 0) {
-        console.log("ZoomArchy INPUT action: wheel up -> zoom in +0.5")
         applyZoomDelta(0.5)
       } else if (wheel.angleDelta.y < 0) {
-        console.log("ZoomArchy INPUT action: wheel down -> zoom out -0.5")
         applyZoomDelta(-0.5)
       }
     }
   }
 
-  // Temporary zoom indicator for interaction feedback
+  // Zoom level indicator for interaction feedback
   Rectangle {
     id: zoomIndicator
     z: 200
@@ -265,7 +240,6 @@ PanelWindow {
   }
 
   function open(payload) {
-    console.log("ZoomArchy open called, shown:", window.shown, "payload:", payload)
     if (window.shown) {
       // Already shown, just reset zoom
       window.zoomLevel = 2.0

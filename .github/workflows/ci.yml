@@ -1,0 +1,106 @@
+name: CI
+
+"on":
+  push:
+    branches:
+      - main
+    paths:
+      - "manifest.json"
+      - "Overlay.qml"
+      - "README.md"
+      - "CHANGELOG.md"
+      - "AGENTS.md"
+      - ".github/workflows/**"
+      - ".github/dependabot.yml"
+      - ".gitignore"
+      - ".gitattributes"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "manifest.json"
+      - "Overlay.qml"
+      - "README.md"
+      - "CHANGELOG.md"
+      - "AGENTS.md"
+      - ".github/workflows/**"
+      - ".github/dependabot.yml"
+      - ".gitignore"
+      - ".gitattributes"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate plugin files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Validate JSON and manifest
+        run: |
+          python3 - <<'PYTHON'
+          import json
+          import pathlib
+          import sys
+
+          root = pathlib.Path(".")
+          manifest_path = root / "manifest.json"
+          overlay_path = root / "Overlay.qml"
+
+          try:
+              manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+          except Exception as exc:
+              print(f"manifest.json is not valid JSON: {exc}")
+              sys.exit(1)
+
+          errors = []
+          if manifest.get("schemaVersion") != 1:
+              errors.append("schemaVersion must be 1")
+          if manifest.get("id") != "jp.zoomarchy":
+              errors.append("id must be 'jp.zoomarchy'")
+          if manifest.get("kinds") != ["overlay"]:
+              errors.append("kinds must be ['overlay']")
+          if manifest.get("keepLoaded") is not True:
+              errors.append("keepLoaded must be true")
+          entry_points = manifest.get("entryPoints")
+          if not isinstance(entry_points, dict) or entry_points.get("overlay") != "Overlay.qml":
+              errors.append("entryPoints.overlay must be 'Overlay.qml'")
+
+          for field in ("name", "version", "description"):
+              if not isinstance(manifest.get(field), str) or not manifest.get(field).strip():
+                  errors.append(f"{field} must be a non-empty string")
+
+          if not overlay_path.is_file():
+              errors.append("Overlay.qml is missing from repository root")
+
+          if errors:
+              for err in errors:
+                  print(f"Manifest/structure check failed: {err}")
+              sys.exit(1)
+
+          print("manifest.json and plugin root structure checks passed")
+          PYTHON
+
+      - name: Check for accidental diagnostic logging
+        run: |
+          if grep -n 'console\.log' Overlay.qml; then
+            echo "Overlay.qml must not contain console.log"
+            exit 1
+          fi
+          echo "No console.log found in Overlay.qml"
+
+      - name: Check README installation guidance
+        run: |
+          if grep -F 'cp -r ./*' README.md; then
+            echo "README.md must not use 'cp -r ./*' for installation"
+            exit 1
+          fi
+          grep -F 'omarchy plugin add https://github.com/vlaktaks/ZoomArchy.git --enable' README.md >/dev/null
+          grep -F 'install -m644 manifest.json ~/.config/omarchy/plugins/jp.zoomarchy/' README.md >/dev/null
+          grep -F 'install -m644 Overlay.qml ~/.config/omarchy/plugins/jp.zoomarchy/' README.md >/dev/null
+          echo "README installation guidance checks passed"
