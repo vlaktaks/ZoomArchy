@@ -20,15 +20,15 @@
   ZoomArchy is an Omarchy/Quickshell overlay plugin that captures the current screen on activation and presents a fullscreen magnifier lens with a radial spotlight, letting you zoom smoothly into details without leaving your Wayland/Hyprland session.
 </p>
 
-<img src="preview.png" alt="ZoomArchy preview" width="720">
+<img src="preview.gif" alt="ZoomArchy animated preview" width="720">
 
-<p><sub>Static preview image — not a recorded runtime capture.</sub></p>
+<p><sub>Animated preview image — not runtime or Marketplace validation evidence.</sub></p>
 
 </div>
 
 - **GitHub:** <https://github.com/vlaktaks/ZoomArchy>
 - **Plugin ID:** `jp.zoomarchy`
-- **Version:** `0.1.3`
+- **Version:** `0.1.4`
 - **Kind:** `overlay` (Quickshell/Omarchy plugin)
 - **Entry point:** `Overlay.qml`
 

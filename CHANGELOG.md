@@ -19,6 +19,17 @@ All notable changes to this project are documented in this file.
 - Enabled and verified Copilot automatic code review for default-branch PRs (including draft PRs and `review_on_push`), while documenting that automatic Copilot review is distinct from a separately verified, natively enforced mandatory Copilot formal-approval merge gate unless explicitly supported/configured.
 - Updated `AGENTS.md` and `README.md` to distinguish intended policy, local workflow implementation, remote settings, and independently verified enforcement/limitations.
 
+## [0.1.4]
+
+### Changed
+- Bumped the current plugin version to `0.1.4` in project metadata and documentation.
+
+### Documentation
+- Replaced the static README preview image with the supplied animated GIF (`preview.gif`) and updated README preview wording to describe it as an animated preview (not runtime or Marketplace validation evidence).
+
+### Maintenance
+- Removed the obsolete root-level `preview.png` asset and updated `.gitignore` to remove the preview-specific PNG tracking exception no longer needed.
+
 ## [0.1.3]
 
 ### Changed

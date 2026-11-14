@@ -8,7 +8,7 @@ Project instructions for coding agents working in this repository. Base changes 
 - **Plugin ID:** `jp.zoomarchy` (canonical; do not introduce alternatives such as `zoomarchy` or `jp_zoomarchy`)
 - **Purpose:** screen magnifier / spotlight overlay plugin for the Omarchy shell (Quickshell/QML), showing a magnified lens over a captured screenshot with a radial spotlight.
 - **Repository layout:** the **repository root is the plugin root** (installable plugin files live at root).
-- **Version / release administration (current files):** `manifest.json` declares `version: "0.1.3"`; README and CHANGELOG document `0.1.3` as the current prepared version. Existing git tags `v0.1.0` (`4d5c92f`), `v0.1.1` (`deb5f11`), and `v0.1.2` (`eb6aa70`) must not be moved/overwritten/deleted. Any release/version/tag decision or publication action beyond documented preparation requires explicit user approval (see Git and release policy).
+- **Version / release administration (current files):** `manifest.json` declares `version: "0.1.4"`; README and CHANGELOG document `0.1.4` as the current prepared version. Existing git tags `v0.1.0` (`4d5c92f`), `v0.1.1` (`deb5f11`), `v0.1.2` (`eb6aa70`), and `v0.1.3` (`51734bc`) must not be moved/overwritten/deleted. Any release/version/tag decision or publication action beyond documented preparation requires explicit user approval (see Git and release policy).
 
 ## B. Architecture (factual, current implementation)
 
