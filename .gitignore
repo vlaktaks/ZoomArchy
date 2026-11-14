@@ -37,18 +37,19 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Local legacy Qt/C++ and non-plugin source/build files (kept locally, not part of plugin release)
-main.cpp
-main.qml
-main.o
-zoomarchy.cpp
-zoomarchy.h
-zoomarchy.o
-ZoomArchyConfig.h
-zoomarchy.pro
-assets.qrc
-qml.qrc
-app.desktop
-install.inx
-assets/
-src/
+# Local legacy Qt/C++ and non-plugin source/build files in repository root
+# (historical sources archived under archive/legacy-qt-app/; keep root artifacts/local clutter ignored)
+/main.cpp
+/main.qml
+/main.o
+/zoomarchy.cpp
+/zoomarchy.h
+/zoomarchy.o
+/ZoomArchyConfig.h
+/zoomarchy.pro
+/assets.qrc
+/qml.qrc
+/app.desktop
+/install.inx
+/assets/
+/src/
