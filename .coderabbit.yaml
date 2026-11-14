@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+# CodeRabbit configuration for ZoomArchy (Omarchy/Quickshell overlay plugin).
+# Advisory automated review layer; does not replace human review or existing governance.
+# Canonical project/security rules live in AGENTS.md, README.md, and CHANGELOG.md.
+
+reviews:
+  path_instructions:
+    - path: "Overlay.qml"
+      instructions: |
+        Treat as security-sensitive capture/UI implementation. Enforce AGENTS.md security invariants:
+        - Require validated, absolute, current-user-owned `$XDG_RUNTIME_DIR` with restrictive `0700` permissions; no fixed/predictable paths and no `/tmp` fallback.
+        - Create a unique per-capture private directory (e.g. `mktemp -d "$XDG_RUNTIME_DIR/zoomarchy.XXXXXXXX"`), enforce expected prefix and `0700`, capture to `capture.png` with `grim`, harden to `0600`.
+        - Validate final runtime-directory/capture-file components before display using non-dereferencing `stat -c "%u %a %F" -- <path>` (never `-L`/`-Lc`): check owner, type, and restrictive permissions; reject symlinks/FIFOs/non-regular or unsafe files and never show stale/previous screenshots on failure.
+        - Use Quickshell `Process` argv arrays only (no `sh -c`, no unsafe shell interpolation); check exit codes/results.
+        - Preserve token/intent lifecycle isolation and stale-callback guards; cleanup must use explicit original tracked paths/ownership base, remove only ZoomArchy-owned scoped paths (`rm -f`/`rmdir`, no broad/glob/recursive uncontrolled deletion), and remain best-effort (not guaranteed on crashes/forced termination).
+        - Do not claim elimination of intermediate-path/TOCTOU/external-tool risks; preserve documented limitations and existing zoom/lens/spotlight/input/escape/reopen-to-2.0/`cache:false` behavior unless intentionally and correctly changed.
+    - path: "manifest.json"
+      instructions: |
+        Canonical plugin metadata must remain consistent: schemaVersion 1, id `jp.zoomarchy`, kinds `["overlay"]`, keepLoaded true, entryPoints.overlay `Overlay.qml`, and accurate name/version/description. Do not introduce alternative plugin IDs or entrypoints.
+    - path: ".github/workflows/**"
+      instructions: |
+        Preserve CI/governance hardening: required job/check name `Validate plugin files`, minimal permissions, concurrency/timeout, pinned checkout with `persist-credentials: false`, and static checks for canonical files/manifest/entrypoint/install-distribution guidance (no app execution, no repo mutation). Do not weaken required checks, permissions, or protections; keep Dependabot/security updates reconciled intentionally.
+    - path: "AGENTS.md"
+      instructions: |
+        Keep instructions factual to current implementation and repository state. Preserve enduring security invariants (section I), governance (G.1), archive/distribution boundaries (canonical distributable `manifest.json` + `Overlay.qml`; `archive/legacy-qt-app/` non-distributable), and tag/release/PR policies. Do not weaken protections or overstate enforcement/runtime guarantees.
+    - path: "README.md"
+      instructions: |
+        Keep user/contributor documentation accurate: secure capture behavior and documented limitations, canonical installation/distribution, archive status, and CI/PR/governance (including required `Validate plugin files` and that automatic Copilot/Coderabbit reviews are advisory unless separately enforced). Do not claim runtime/Marketplace validation or guarantees not evidenced.
+    - path: "CHANGELOG.md"
+      instructions: |
+        Record relevant security, behavior, CI/governance, and maintenance changes factually. Preserve history and distinguish `[Unreleased]` from released/prepared versions; do not claim releases/tags/publication that do not exist.
+    - path: "archive/legacy-qt-app/**"
+      instructions: |
+        Historical, non-distributable reference material only. Do not reintroduce into plugin runtime/entrypoints/installation/packaging/CI. Preserve historical content unless a narrowly justified correctness/security issue requires change; avoid broad formatting rewrites.

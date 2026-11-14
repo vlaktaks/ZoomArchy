@@ -32,6 +32,7 @@ Thumbs.db
 *.jpg
 *.jpeg
 *.webp
+!preview.png
 
 # IDE/project metadata (optional local)
 .vscode/
@@ -51,5 +52,4 @@ Thumbs.db
 /qml.qrc
 /app.desktop
 /install.inx
-/assets/
 /src/
