@@ -1,10 +1,34 @@
+<div align="center">
+
 # ZoomArchy
 
-ZoomArchy is an Omarchy/Quickshell overlay plugin that provides a screen magnifier lens with a spotlight effect. It captures the current screen on activation and displays a fullscreen overlay with a movable magnified area that follows the cursor.
+**Screenshot magnifier overlay for Omarchy on Wayland/Hyprland Linux**
+
+*Focus on what matters — a fast, cursor-following zoom lens with a spotlight over your current screen.*
+
+`Secure per-capture storage` · `Cursor lens & spotlight` · `Click/wheel zoom` · `Quickshell overlay`
+
+<p>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/vlaktaks/ZoomArchy" alt="License"></a>
+  <a href="https://github.com/vlaktaks/ZoomArchy/stargazers"><img src="https://img.shields.io/github/stars/vlaktaks/ZoomArchy" alt="Stars"></a>
+  <a href="https://github.com/vlaktaks/ZoomArchy/network/members"><img src="https://img.shields.io/github/forks/vlaktaks/ZoomArchy" alt="Forks"></a>
+  <a href="https://github.com/vlaktaks/ZoomArchy/issues"><img src="https://img.shields.io/github/issues/vlaktaks/ZoomArchy" alt="Issues"></a>
+  <a href="https://github.com/vlaktaks/ZoomArchy/commits/main"><img src="https://img.shields.io/github/last-commit/vlaktaks/ZoomArchy" alt="Last Commit"></a>
+</p>
+
+<p>
+  ZoomArchy is an Omarchy/Quickshell overlay plugin that captures the current screen on activation and presents a fullscreen magnifier lens with a radial spotlight, letting you zoom smoothly into details without leaving your Wayland/Hyprland session.
+</p>
+
+<img src="preview.png" alt="ZoomArchy preview" width="720">
+
+<p><sub>Static preview image — not a recorded runtime capture.</sub></p>
+
+</div>
 
 - **GitHub:** <https://github.com/vlaktaks/ZoomArchy>
 - **Plugin ID:** `jp.zoomarchy`
-- **Version:** `0.1.2`
+- **Version:** `0.1.3`
 - **Kind:** `overlay` (Quickshell/Omarchy plugin)
 - **Entry point:** `Overlay.qml`
 
@@ -176,7 +200,7 @@ The current `Overlay.qml` implementation does not read external runtime configur
 ## Contributing and pull requests
 
 1. **Open a pull request against `main`.** Direct pushes and force pushes to `main` are blocked by repository rulesets.
-2. **Wait for CI and reviews.** GitHub Actions runs the `CI` workflow (`.github/workflows/ci.yml`); the required status check is `Validate plugin files`. Automatic Copilot code review is enabled for PRs to the default branch (including draft PRs and new pushes) as configured in the repository ruleset, but automatic Copilot review is not the same as a separately enforced mandatory Copilot formal-approval merge gate unless explicitly configured and verified.
+2. **Wait for CI and reviews.** GitHub Actions runs the `CI` workflow (`.github/workflows/ci.yml`); the required status check is `Validate plugin files`. Automatic Copilot code review is enabled for PRs to the default branch (including draft PRs and new pushes) as configured in the repository ruleset, but automatic Copilot review is not the same as a separately enforced mandatory Copilot formal-approval merge gate unless explicitly configured and verified. The repository may also include CodeRabbit configuration (`.coderabbit.yaml`) for additional AI code review; CodeRabbit runs only when the official CodeRabbit GitHub App is installed/authorized for this repository and is **advisory only** (not a required approval/merge gate unless separately configured and verified).
 3. **Obtain required approval and address feedback.** At least one approving review is required, stale approvals are dismissed on new pushes, approval of the most recent reviewable push is required, and all review conversations must be resolved. Address review feedback, especially for security-sensitive changes.
 4. **Merge only when GitHub confirms all enforced requirements are met.** Required checks must pass (with the up-to-date branch/check policy enforced by the ruleset) before merging. Verify the current repository policy in GitHub if rulesets change.
 

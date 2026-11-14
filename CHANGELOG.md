@@ -19,6 +19,19 @@ All notable changes to this project are documented in this file.
 - Enabled and verified Copilot automatic code review for default-branch PRs (including draft PRs and `review_on_push`), while documenting that automatic Copilot review is distinct from a separately verified, natively enforced mandatory Copilot formal-approval merge gate unless explicitly supported/configured.
 - Updated `AGENTS.md` and `README.md` to distinguish intended policy, local workflow implementation, remote settings, and independently verified enforcement/limitations.
 
+## [0.1.3]
+
+### Changed
+- Bumped the current plugin version to `0.1.3` in project metadata and documentation.
+
+### Documentation
+- Refreshed `README.md` with a new project header, repository badges, and a static root-level preview image (`preview.png`), while preserving existing technical documentation.
+- Updated `AGENTS.md` and `README.md` to document CodeRabbit as an optional, advisory automated review layer (repository configuration may prepare review, but official GitHub App installation/authorization is required to run it) without treating it as a required approval/merge gate or weakening existing governance/check requirements.
+
+### Maintenance
+- Added repository CodeRabbit configuration (`.coderabbit.yaml`) to prepare optional, advisory AI code review focused on ZoomArchy security invariants and project constraints.
+- Updated `.gitignore` to allow tracking the root-level `preview.png` README asset.
+
 ## [0.1.2]
 
 ### Changed
